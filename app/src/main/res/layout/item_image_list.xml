@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parentLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="centerCrop"
+        android:layout_margin="5dp"
+        android:elevation="2dp"
+        tools:src="@mipmap/ic_launcher"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent" />
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/deleteImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignBottom="@id/imageView"
         android:layout_margin="10dp"
+        android:elevation="2dp"
         android:src="@drawable/baseline_delete_forever_24"/>
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -20,16 +32,8 @@
         android:layout_alignBottom="@id/imageView"
         android:layout_toEndOf="@id/deleteImage"
         android:layout_margin="10dp"
-        android:src="@drawable/baseline_share_24"/>
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:scaleType="centerCrop"
-        android:layout_margin="5dp"
         android:elevation="2dp"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent" />
+        android:src="@drawable/baseline_share_24"/>
 
 
 </RelativeLayout>

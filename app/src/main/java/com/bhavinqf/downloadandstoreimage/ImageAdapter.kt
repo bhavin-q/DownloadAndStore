@@ -47,6 +47,7 @@ class ImageAdapter(
                 }
 
                 deleteImage.setOnClickListener {
+                    //TODO: delete image issue below android api 30 and above api 27
                     deleteUtilsR.deleteImage(fileObj.path,
                         object : DeleteCallBack {
                             override fun onDeleted() {
@@ -60,7 +61,9 @@ class ImageAdapter(
 
                             }
                         }) }
-                shareImage.setOnClickListener {  }
+                shareImage.setOnClickListener {
+                    //TODO: share image pending
+                }
 
             }
         }
