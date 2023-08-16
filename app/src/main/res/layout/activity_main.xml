@@ -26,7 +26,7 @@
         app:layout_constraintTop_toBottomOf="@+id/enterUrl">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/Download"
+            android:id="@+id/downloadButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Download" />
@@ -39,11 +39,18 @@
             app:indicatorColor="@color/black"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/Clear"
+            android:id="@+id/photoPickerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="Clear" />
+            android:text="Photo Picker" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/videoPickerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="Video Picker" />
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

@@ -16,13 +16,21 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bhavinqf.downloadandstoreimage.databinding.ActivityMainBinding
+import com.bhavinqf.downloadandstoreimage.dialogs.CustomVideoDialog
 import com.bhavinqf.downloadandstoreimage.fordelete.DeleteUtilsR
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.permissionx.guolindev.PermissionX
 import java.io.File
@@ -37,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     var imageAdapter: ImageAdapter? = null
     var mArrayList: ArrayList<File> = arrayListOf()
     val LOG_TAG="bhavin->"
+    var selectedPhotoUri:Uri?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -56,7 +65,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.apply {
-            Download.setOnClickListener {
+            photoPickerButton.setOnClickListener {
+                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+//                val mimeType = "image/*"
+//                pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.SingleMimeType(mimeType)))
+            }
+            videoPickerButton.setOnClickListener {
+                pickMediaVideo.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.VideoOnly))
+            }
+
+
+            downloadButton.setOnClickListener {
 
                 if (urlString.isNotEmpty()) {
 
@@ -95,9 +114,6 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                     }
-                    /*else if (){
-
-                        }*/
                     else {
                         PermissionX.init(activity)
                             .permissions(
@@ -154,6 +170,32 @@ class MainActivity : AppCompatActivity() {
         refreshData()
     }
 
+
+    // Registers a photo picker activity launcher in single-select mode.
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            selectedPhotoUri=uri
+            Log.e("PhotoPicker", "Selected URI: $uri")
+            binding.imageViewSample.setImageURI(selectedPhotoUri)
+        } else {
+            Log.e("PhotoPicker", "No media selected")
+        }
+    }
+    val pickMediaVideo = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        // Callback is invoked after the user selects a media item or closes the
+        // photo picker.
+        if (uri != null) {
+            val customDialog = CustomVideoDialog(this,uri)
+            customDialog.show()
+        } else {
+            Log.e("PhotoPicker", "No media selected")
+        }
+    }
+
+
+
     fun downloadAndSaveBitmap(urlString: String, progressBar: ProgressBar) {
         progressBar.visibility = View.VISIBLE
         var bitmap: Bitmap? = null
@@ -163,6 +205,28 @@ class MainActivity : AppCompatActivity() {
             .load(urlString)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
+            .listener(object : RequestListener<Bitmap> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    e?.stackTrace
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Bitmap?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                   return false
+                }
+
+            })
             .into(object : CustomTarget<Bitmap?>() {
                 override fun onResourceReady(
                     resource: Bitmap,
@@ -183,6 +247,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
                     super.onLoadFailed(errorDrawable)
+
                     runOnUiThread {
                         progressBar.visibility = View.GONE
                     }
